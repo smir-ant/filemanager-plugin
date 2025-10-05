@@ -1,30 +1,47 @@
-# Filemanager Plugin
+# Filemanager Plugin **improved**
 
 A simple plugin that allows for easy navigation of a file tree.
 
-![Example picture](./example.jpg?raw=true "Example")
+<img src="https://github.com/user-attachments/assets/33bea6eb-7cba-4632-8bd9-138713bd0b0a" />
 
-**Installation:** run `plugin install filemanager` and restart Micro.
+### Installation:
+```shell
+cd ~/.config/micro/plug/
+git clone https://github.com/smir-ant/filemanager-plugin.git filemanager
+```
 
-## Basics
+### Run
 
-The top line always has the current directory's path to show you where you are.\
-The `..` near the top is used to move back a directory, from your current position.
+`ctrl+e` in micro > tree to activate, and again to deactivate
 
-All directories have a `/` added to the end of it, and are syntax-highlighted as a `special` character.\
-If the directory is expanded, there will be a `+` to the left of it. If it is collapsed there will be a `-` instead.
+Want hotkey for this? Add `"Ctrl-j": "command:tree"` in bindings.json for ctrl+j
 
-**NOTE:** If you change files without using the plugin, it can't know what you did. The only fix is to close and open the tree.
+
+### What and why
+
+The original repository received its last commit about 6 years ago. And this is not a problem in itself. The problem is that there are big problems and difficulties in using.
+
+Improvements:
++ MOUSE! now u can click on files or folders to collapse/expand (move to folder is click+tab)
++ Opens the directory of the open file, not from the binary
++ The standard width is set via `"filemanager.width": 20` in the settings json file
++ Relative path, not absolute <sub>(u can move above by select .. and tab, then ./ path will change on ../, again? ../.. - like relative path)</sub>. p.s. reset by reactivate `ctrl+e` > tree
+
+Bonus:
++ U can safely click at the bottom, in an empty space (hello https://github.com/buxxket/filemanager-plugin )
+
 
 ### Options
 
 | Option                       | Purpose                                                      | Default |
 | :--------------------------- | :----------------------------------------------------------- | :------ |
-| `filemanager-showdotfiles`   | Show dotfiles (hidden if false)                              | `true`  |
-| `filemanager-showignored`    | Show gitignore'd files (hidden if false)                     | `true`  |
-| `filemanager-compressparent` | Collapse the parent dir when left is pressed on a child file | `true`  |
-| `filemanager-foldersfirst`   | Sorts folders above any files                                | `true`  |
-| `filemanager-openonstart`    | Automatically open the file tree when starting Micro         | `false` |
+| `filemanager.width`          | Width(symbols) of the filemanager panel                      | `30`    |
+| `filemanager.showdotfiles`   | Show dotfiles (hidden if false)                              | `true`  |
+| `filemanager.showignored`    | Show gitignore'd files (hidden if false)                     | `true`  |
+| `filemanager.compressparent` | Collapse the parent dir when left is pressed on a child file | `true`  |
+| `filemanager.foldersfirst`   | Sorts folders above any files                                | `true`  |
+| `filemanager.openonstart`    | Automatically open the file tree when starting Micro         | `false` |
+
 
 ### Commands and Keybindings
 
