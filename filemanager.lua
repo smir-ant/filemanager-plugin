@@ -520,6 +520,30 @@ local function go_back_dir()
 	end
 end
 
+local function replace_file_in_main_pane(path)
+    -- First, we must switch focus away from the file manager and to the
+    -- pane where the file will be opened.
+    local max_attempts = 10 -- Safety break to prevent infinite loops
+    local count = 0
+    while micro.CurPane() == tree_view and count < max_attempts do
+        micro.CurPane():NextSplit()
+        count = count + 1
+    end
+
+    -- After the loop, if we successfully moved to a different pane,
+    -- we can proceed.
+    if micro.CurPane() ~= tree_view then
+        -- CRITICAL: Instead of manually setting the buffer (which causes focus issues),
+        -- we now execute the editor's own internal 'open' command. This is a much
+        -- more robust method, as it lets the editor handle all the necessary
+        -- state changes, including buffer switching and focus management.
+        micro.CurPane():HandleCommand("open " .. path)
+    else
+        -- This case would happen if the file manager is the only open pane.
+        micro.InfoBar():Error("Filemanager: Could not find a pane to open the file in.")
+    end
+end
+
 -- Toggles a directory open/closed, or opens a file
 local function toggle_or_open_at_y(y)
 	-- 0 is the zero-based index of ".."
@@ -541,10 +565,12 @@ local function toggle_or_open_at_y(y)
 				compress_target(scanlist_y, false)
 			end
 		else
+			-- Select the line to give visual feedback
+			select_line()
 			-- It's a file, so open it
 			micro.InfoBar():Message("Filemanager opened ", scanlist[scanlist_y].abspath)
-			-- Opens the absolute path in new vertical view
-			micro.CurPane():VSplitIndex(buffer.NewBufferFromFile(scanlist[scanlist_y].abspath), true)
+			-- Opens the absolute path in the main pane, replacing its content
+			replace_file_in_main_pane(scanlist[scanlist_y].abspath)
 		end
 	else
 		micro.InfoBar():Error("Can't open that")
